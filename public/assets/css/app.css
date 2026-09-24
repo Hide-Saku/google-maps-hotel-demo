@@ -12,6 +12,7 @@ h1{font-size:20px;margin:8px 0 12px}h2{font-size:16px;margin:24px 0 8px}
 select,input,textarea{font:inherit;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text);max-width:100%}
 fieldset{border:1px solid var(--line);border-radius:8px;margin:8px 0;padding:6px 12px}legend{font-size:12px;color:var(--muted)}
 .check{display:inline-flex;align-items:center;gap:6px;margin-right:16px}.check input{width:auto}
+.card .check{flex-direction:row;font-size:14px;color:var(--text)}
 .counts{font-weight:700;margin:8px 0}.counts.bad{color:var(--danger)}
 #map{height:60vh;min-height:360px;border:1px solid var(--line);border-radius:12px}
 .errors{background:#fde8e6;color:var(--danger);padding:8px 12px;border-radius:8px}.errors ul{margin:0;padding-left:1.2em}
