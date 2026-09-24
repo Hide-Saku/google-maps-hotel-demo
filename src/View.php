@@ -21,7 +21,7 @@ final class View
             unset($_SESSION['flash']);
         }
         echo '<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
-            . '<title>' . h($title) . ' | 管理画面（デモ）</title><link rel="stylesheet" href="/assets/css/app.css"></head><body class="admin">'
+            . '<title>' . h($title) . ' | 管理画面（デモ）</title><link rel="icon" href="data:,"><link rel="stylesheet" href="/assets/css/app.css"></head><body class="admin">'
             . '<header class="bar"><a href="/admin/">管理画面（デモ）</a><span class="grow"></span><a href="/">地図を見る</a>';
         if (Auth::check()) {
             echo '<form method="post" action="/admin/logout.php" class="inline">' . Csrf::field()

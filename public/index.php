@@ -22,6 +22,7 @@ $map = ($_GET['map'] ?? '') === 'google' && $key !== '' ? 'google' : 'leaflet';
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>施設マップ（デモ）</title>
+<link rel="icon" href="data:,">
 <link rel="stylesheet" href="/assets/vendor/leaflet/leaflet.css">
 <link rel="stylesheet" href="/assets/css/app.css?v=<?= filemtime(__DIR__ . '/assets/css/app.css') ?>">
 <?php if ($key !== ''): ?><meta name="gmaps-key" content="<?= h($key) ?>"><?php endif; ?>
