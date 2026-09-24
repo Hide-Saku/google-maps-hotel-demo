@@ -17,6 +17,20 @@ docker compose up -d --build
 - テスト: `docker compose --profile test up -d --build web_test` → `docker compose --profile test exec -T web_test php tests/run_all.php`
 - わざと壊す確認: `python tests/mutation_check.py`（コードのコピーを壊して、テストが赤になることを確かめる）
 
+## 画面（`docs/screens/`・Playwright で自動撮影。`node tests/capture_screens.mjs`）
+撮影は画面の中身だけ（開発者ツール・`.env`・キーは写っていない。ログイン画面は入力前の状態）。Google 版は 2026-09-25 にキーを入れて撮影。
+
+| 地図（Leaflet + OpenStreetMap） | 地図（Google Maps） |
+|---|---|
+| ![京都・Leaflet](docs/screens/01_map_kyoto_leaflet.png) | ![京都・Google](docs/screens/03_map_kyoto_google.png) |
+| ![那覇・Leaflet](docs/screens/02_map_naha_leaflet.png) | ![那覇・Google](docs/screens/04_map_naha_google.png) |
+
+- 京都・Google 版でマーカーを押した状態（情報ウィンドウ）: ![情報ウィンドウ](docs/screens/10_map_kyoto_google_infowindow.png)
+- 管理画面: [ログイン](docs/screens/05_admin_login.png) ／ [ホテル一覧と取り込み結果](docs/screens/06_admin_index_import_history.png) ／ [ホテルの設定・施設一覧](docs/screens/07_admin_hotel_facilities.png) ／ [施設の編集](docs/screens/08_admin_facility_edit.png)
+- テスト 27件合格: ![テスト](docs/screens/09_tests_passed.png)（`docs/evidence/test_output.txt` の実出力を端末風に描いた画像）
+- 取り込み結果の画面（06）の日時は DB の時刻（UTC）で、日本時間の表記（`docs/evidence/`）とは 9 時間ずれる。
+- 画面の地図の背景は、各社の地図が持つ実在の地名を含む。施設・ホテル・住所は架空で、座標だけ実在の地域。
+
 ## 作ったもの
 | 機能 | 内容 |
 |---|---|
@@ -28,17 +42,18 @@ docker compose up -d --build
 | 設計提案メモ | `docs/DESIGN_PROPOSALS.md`（キーの制限と費用／座標の保存方針／スキーマと AI 検索の差し込み口。出典つき・未確認は明記） |
 
 ## 実測した数字（2026-09-25・Docker 上で実行）
-- **マーカー数 = API の件数 = DB の表示対象の件数**（Leaflet 版・ブラウザで確認）: **京都 8・札幌 4 はブラウザで、画面のマーカー数まで確認**（札幌は DB に5件あるが、「交通」を表示しない設定なので1件は出ない）。**那覇 5 は API の件数だけを curl で確認（画面のマーカー数は未確認）**。カテゴリを素早く切り替える操作を10回繰り返しても、京都の画面・API・DB が一致
+- **マーカー数 = API の件数 = DB の表示対象の件数**（Leaflet 版・ブラウザで確認。Google 版は下の節）: **京都 8・札幌 4 はブラウザで、画面のマーカー数まで確認**（札幌は DB に5件あるが、「交通」を表示しない設定なので1件は出ない）。**那覇 5 は 2026-09-25 の自動撮影で、画面のマーカー数まで確認**（`docs/screens/measurements.json`）。カテゴリを素早く切り替える操作を10回繰り返しても、京都の画面・API・DB が一致
 - **取り込み**: 1回目 追加10・スキップ7 → 2回目（同じデータ）**追加0・更新0・変更なし10**・スキップ7（施設は計18件のまま）: `docs/evidence/import_output.txt`（DB の `import_runs` の実出力）
 - **テスト 27件合格**（規則の単体 12＋HTTP 15。実際にリクエストを送って、未ログイン・CSRF・SQL の特殊文字・XSS・API の異常系を確認）: `docs/evidence/test_output.txt`
 - **わざと壊した7か所すべてで、テストが赤**（認可／CSRF／冪等／SQL のプレースホルダ／HTML エスケープ／セッションID／表示カテゴリ）: `docs/evidence/mutation_check_output.txt`
 - 見つけて直した不具合: カテゴリを素早く切り替えると、古い応答が後から届いて表示を上書きした（ブラウザで再現→修正→10回連続で一致を確認）
+- 見つけて直した見た目の不具合（2026-09-25・撮影した画像で発見）: 管理画面のホテル設定で、カテゴリのチェックボックスが縦に中央寄せになっていた（`.card label` の指定が `.check` に勝っていた）→ `app.css` に1行足して修正。テスト 27件は修正後も合格
 
-## Google 版の状態: **未検証**
-- Google Maps のアダプタは書いたが、**API キーで実際に動かしていない。動いたとは書かない。**
-- キーが無い間は、地図の選択肢に「Google Maps（APIキー未設定・未検証）」が出て、選べない。
-- **キーを入れるとき（オーナーの作業。キーはチャットに貼らない）**: `.env` の `GOOGLE_MAPS_API_KEY` に自分で入れて `docker compose up -d`。キーには **HTTP リファラ制限（`http://localhost:8080/*` と `http://127.0.0.1:8080/*`）と API 制限（Maps JavaScript API のみ）**を付ける。予算アラートとクォータの設定は `docs/DESIGN_PROPOSALS.md` §1。
-- 動かしたら、マーカー数・情報ウィンドウ・エラー時の挙動（キー制限・請求先・API 未有効化の切り分け）を実測して、ここに「検証済み」と書く。
+## Google 版の状態: **一部検証済み**（2026-09-25・オーナーが `.env` にキーを入れて実測）
+- **確認できたこと**: Google Maps で地図が描画され、**マーカー数 = API の件数**（京都 8・那覇 5。画面の表示と直接の API 呼び出しの件数が一致）。**マーカーを押すと情報ウィンドウ**（施設名・カテゴリ・住所・説明）が出る（京都）。コンソールエラーなし。画像: `docs/screens/03`・`04`・`10`、数値: `docs/screens/measurements.json`
+- **確認していないこと**: キーの制限が効いているか（リファラ制限・API 制限はオーナーの設定で、こちらは未確認）／エラー時の挙動（キー不正・請求先なし・API 未有効化の切り分け）／札幌の Google 表示／Google 版でのカテゴリ切り替えの連続操作／費用（利用量・請求）の実測。**確認するまで「動作確認済み」と広げて書かない。**
+- キーは `.env` の `GOOGLE_MAPS_API_KEY`（コミットしない。チャットに貼らない）。付けるべき制限（HTTP リファラ `http://localhost:8080/*` と `http://127.0.0.1:8080/*`・Maps JavaScript API のみ・予算アラート）は `docs/DESIGN_PROPOSALS.md` §1。
+- キーが無いときは、地図の選択肢に「Google Maps（APIキー未設定・未検証）」が出て、選べない。
 
 ## 作っていないもの・未検証の点
 - 先方の β 版の再現／AI 検索・AI コンシェルジュの実装（設計メモで差し込み口を示しただけ）／実在のホテル・実在サービスの API の利用
@@ -47,7 +62,8 @@ docker compose up -d --build
 - 外部で削除された施設の扱い（論理削除）は未実装（設計メモに記載）
 - 取り込みは、管理画面で手編集した「取り込み由来の行」を、次の取り込みで上書きする（手編集を保護する仕様は無い）
 - ログインのセッションに有効期限の設定は無い（ブラウザを閉じるまで）。`docker-compose.yml` は 8080・8081 を全インターフェースに公開するので、`.env` の管理者パスワードは必ず自分の値にする
-- ブラウザでの画面の確認は、内蔵ブラウザでの Leaflet 版のみ。他のブラウザ・スマホ実機は未確認。管理画面の見た目の目視は未実施
+- ブラウザでの画面の確認は、内蔵ブラウザ（Leaflet 版）と Edge の自動撮影（Leaflet・Google の京都・那覇と管理画面）のみ。他のブラウザ・スマホ実機は未確認
+- 地図ページの初回表示で、ブラウザのコンソールに 404 が1件出る（`/favicon.ico` が無いため。`curl` で 404 を確認。画面の動作には影響しない・未修正）
 - Google の利用規約（緯度経度の保存期間・Google 以外の地図への表示）は、規約本文を取得できず**未確認**
 
 ## 構成
@@ -55,3 +71,30 @@ docker compose up -d --build
 
 ## 経過（`git log`）
 `git log --format='%h %ad %s' --date=iso` を参照。
+
+## GitHub に公開できる状態かの最終確認（2026-09-25・コミット前の作業ツリーで実施）
+公開の操作そのものはオーナー。ここは確認結果だけ。
+
+| 確認 | 結果 | 確かめ方 |
+|---|---|---|
+| `.env` が追跡対象外 | 追跡なし・`.gitignore` の1行目で除外。履歴にも `.env` は 0 件 | `git ls-files` / `git check-ignore -v .env` / `git log --all -- .env` |
+| コミットされる設定ファイル | `.env.example` のみ。キーは空、パスワードは `change-me` の見本値 | `git ls-files`・`.env.example` の目視 |
+| 履歴に秘密が無い | **5 コミット・約 289KB を走査して 0 件**（gitleaks 8.30.1） | `gitleaks git --redact .` |
+| 作業ツリーの走査 | 3 件検出。**すべて未コミットの `.env` 自身**（キーとパスワード。`.gitignore` 済みで公開されない）。ほかは 0 件 | `gitleaks dir --redact .`（検出ファイルを JSON で確認） |
+| `.env` の実際の値が追跡ファイルに入っていない | API キー・管理者パスワード・DB パスワードのいずれも 0 件 | `git grep -F`（値は表示していない） |
+| 画像に秘密が写っていない | 目視で全 10 枚を確認。キー・`.env`・開発者ツール・パスワードの黒丸なし | 画像を開いて確認 |
+| データが架空 | ホテル・施設・住所はすべて「（架空）」付き。**実在の店名との照合は未実施** | `data/mock_facilities.json`・`db/seed.sql` |
+| ライセンス | **リポジトリの LICENSE は未作成**（公開時にオーナーが決める。同梱の Leaflet は BSD-2-Clause） | `ls LICENSE*` |
+
+- **キーの扱いの注意**: 地図ページの HTML には、Google のキーが `<meta name="gmaps-key">` として出る（Maps JavaScript API の仕様上、ブラウザに渡る）。だから**リファラ制限と API 制限が必須**。制限を付けていない状態でデモを外部に公開しない。
+- 上記は 2026-09-25 時点。公開の直前に `gitleaks git .` を再実行する。
+
+## 画面録画の台本（30〜60秒・オーナーが撮る想定）
+1. 地図ページ（京都・Leaflet）: 「DB の件数 8／マーカー数 8（一致）」を見せる
+2. カテゴリを外す・戻す（件数と表示が連動して変わる）
+3. マーカーを押して情報ウィンドウ
+4. 地図の選択を Google Maps に切り替え、同じ件数・同じ位置であることを見せる（キーを入れた環境）
+5. ホテルを那覇に切り替える（カテゴリの種類がホテルごとに違う）
+6. 管理画面にログイン → ホテル一覧と取り込みの履歴（追加 10・スキップ 7 → 2 回目は変更なし 10）
+7. 施設を 1 件編集して保存 → 地図に戻って反映を見せる
+8. 最後にテスト 27 件合格の画面（または画像）を見せて、「自主検証で実務の実績ではない」と一言添える

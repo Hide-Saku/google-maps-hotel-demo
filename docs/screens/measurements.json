@@ -1,0 +1,43 @@
+{
+  "google_key_present": true,
+  "maps": [
+    {
+      "file": "01_map_kyoto_leaflet.png",
+      "hotel": "kyoto",
+      "provider": "leaflet",
+      "api_count": 8,
+      "counts_text": "DB（API）の件数: 8 ／ 画面のマーカー数: 8（一致）",
+      "error_text": "",
+      "console_errors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    {
+      "file": "02_map_naha_leaflet.png",
+      "hotel": "naha",
+      "provider": "leaflet",
+      "api_count": 5,
+      "counts_text": "DB（API）の件数: 5 ／ 画面のマーカー数: 5（一致）",
+      "error_text": "",
+      "console_errors": []
+    },
+    {
+      "file": "03_map_kyoto_google.png",
+      "hotel": "kyoto",
+      "provider": "google",
+      "api_count": 8,
+      "counts_text": "DB（API）の件数: 8 ／ 画面のマーカー数: 8（一致）",
+      "error_text": "",
+      "console_errors": []
+    },
+    {
+      "file": "04_map_naha_google.png",
+      "hotel": "naha",
+      "provider": "google",
+      "api_count": 5,
+      "counts_text": "DB（API）の件数: 5 ／ 画面のマーカー数: 5（一致）",
+      "error_text": "",
+      "console_errors": []
+    }
+  ]
+}
