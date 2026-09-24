@@ -28,6 +28,7 @@ Docker 無しで見られる、**読み取り専用**の地図ページ。Leafle
 - **Netlify Drop は、載せたサイトを丸ごと置き換える。既存のサイトに `static/` を直接ドロップしない**（別サイトとして作るか、既存サイトの公開用フォルダにサブフォルダとして足す）
 - 検査: `node tests/static_check.mjs`（27 件・データが API と一致／キーや Google の読み込みが無い／外部 URL は OSM のみ／明記あり）と `tests/static_e2e.mjs`（28 件・ブラウザで実操作）。実出力: `docs/evidence/static_check_output.txt`・`static_e2e_output.txt`
 - 静的版は、管理画面・取り込み・Google Maps 版を**含まない**（それらは Docker で動かす本体）
+- **GitHub Pages 用の複製が `docs/` 直下にある**（`docs/index.html` が入り口）。中身は `static/` と同じで、パスはすべて相対（`vendor/leaflet/...` など）なのでそのまま動く。`static/` が本体・`docs/` はその複製で、更新するときは両方に反映する（`scripts/build_static.mjs` は `static/data.js` だけを作るので、`docs/` 側は手でコピーし直す）。公開（Settings → Pages → Source を `docs/` に設定）はオーナーの操作
 
 ## 画面（`docs/screens/`・Playwright で自動撮影。`node tests/capture_screens.mjs`）
 撮影は画面の中身だけ（開発者ツール・`.env`・キーは写っていない。ログイン画面は入力前の状態）。Google 版は 2026-09-25 にキーを入れて撮影。
