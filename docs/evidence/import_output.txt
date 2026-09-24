@@ -1,0 +1,25 @@
+2026-09-25 取り込みの実行記録（デモのDB hotel_map。docker compose 上で実行した実出力）
+
+【import_runs テーブル（1回目＝起動時の自動取り込み、2回目＝手動で scripts/import.php を実行）】
+id	inserted	updated	unchanged	skipped	status
+1	10	0	0	7	ok
+2	0	0	10	7	ok
+facilities_total
+18
+skipped_rows_recorded_run1
+7
+
+【2回目の手動実行の出力（docker compose exec web php scripts/import.php・同じデータ）】
+取り込み結果: 追加 0 / 更新 0 / 変更なし 10 / スキップ 7 （run_id=2）
+
+【import_skipped（run_id=1・7件）】
+row_index	reason
+10	施設名は1〜100文字で入力してください
+11	緯度は -90〜90 の数値で入力してください
+12	カテゴリが正しくありません
+13	存在しないホテルです: osaka
+14	経度は -180〜180 の数値で入力してください
+15	同じファイル内で external_id が重複しています: MK-001
+16	external_id がありません（または長すぎます）
+【logs/import_skipped.log の run=1 の行数】
+7

@@ -46,5 +46,4 @@
 
 - 従来の `google.maps.Marker` は **2024-02-21（v3.56）から非推奨**（廃止予定は無く、既存の実装は動く）。新規実装は `AdvancedMarkerElement`（`marker` ライブラリの読み込みと **Map ID が必要**）。このデモの Google 版アダプタは `AdvancedMarkerElement` で書いてある（**未検証**）。
   出典: https://developers.google.com/maps/documentation/javascript/markers
-- 認証に失敗したときは、グローバル関数 `gm_authFailure` が呼ばれる。コンソールには `RefererNotAllowedMapError`（読み込んだ URL が許可リファラに無い）などが出る。このデモは、その関数で画面に原因の候補（リファラ制限・API 制限・請求先・API の有効化）を出す。
-  出典: https://developers.google.com/maps/documentation/javascript/error-messages
+- 認証に失敗したときは、グローバル関数 `gm_authFailure` が呼ばれる（出典: https://developers.google.com/maps/documentation/javascript/events ）。コンソールには `RefererNotAllowedMapError`（読み込んだ URL が許可リファラに無い）などが出る（出典: https://developers.google.com/maps/documentation/javascript/error-messages ）。このデモは、`gm_authFailure` で画面に原因の候補（リファラ制限・API 制限・請求先・API の有効化）を出す。
