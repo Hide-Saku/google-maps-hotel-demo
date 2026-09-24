@@ -1,0 +1,24 @@
+{
+  "source": "mock-hotel-api",
+  "note": "外部APIの代わりのモックデータ（すべて架空）。末尾の7行は、わざと不正にしてある（取り込みでスキップされ、理由がログに残ることを確かめるため）",
+  "items": [
+    {"hotel": "kyoto",   "external_id": "MK-001", "name": "朝焼けベーカリー（架空）",   "category": "restaurant", "lat": 34.986500, "lng": 135.760800, "address": "架空市 架空町10-1", "description": "モックAPIから取り込んだ飲食店"},
+    {"hotel": "kyoto",   "external_id": "MK-002", "name": "白川の小径（架空）",       "category": "sight",      "lat": 34.990900, "lng": 135.755100, "address": "架空市 架空町11-2", "description": "モックAPIから取り込んだ観光スポット"},
+    {"hotel": "kyoto",   "external_id": "MK-003", "name": "駅ビル土産店（架空）",     "category": "shop",       "lat": 34.985300, "lng": 135.759400, "address": "架空市 架空駅前12-3", "description": "モックAPIから取り込んだ店舗"},
+    {"hotel": "kyoto",   "external_id": "MK-004", "name": "空港連絡バス乗り場（架空）", "category": "transport",  "lat": 34.984100, "lng": 135.761200, "address": "架空市 架空駅前13-4", "description": "モックAPIから取り込んだ交通拠点"},
+    {"hotel": "sapporo", "external_id": "MK-101", "name": "時計台前カフェ（架空）",   "category": "restaurant", "lat": 43.067900, "lng": 141.351500, "address": "架空市 架空通20-1", "description": "モックAPIから取り込んだ飲食店"},
+    {"hotel": "sapporo", "external_id": "MK-102", "name": "大通り公園の噴水（架空）", "category": "sight",      "lat": 43.060700, "lng": 141.347900, "address": "架空市 架空通21-2", "description": "モックAPIから取り込んだ観光スポット"},
+    {"hotel": "sapporo", "external_id": "MK-103", "name": "地下鉄の入口（架空）",     "category": "transport",  "lat": 43.068100, "lng": 141.349700, "address": "架空市 架空通22-3", "description": "札幌では「交通」を表示しない設定なので、取り込まれても地図には出ない"},
+    {"hotel": "naha",    "external_id": "MK-201", "name": "市場通りの食堂（架空）",   "category": "restaurant", "lat": 26.215400, "lng": 127.685600, "address": "架空市 架空市場30-1", "description": "モックAPIから取り込んだ飲食店"},
+    {"hotel": "naha",    "external_id": "MK-202", "name": "古城跡の展望台（架空）",   "category": "sight",      "lat": 26.217100, "lng": 127.719400, "address": "架空市 架空丘31-2", "description": "モックAPIから取り込んだ観光スポット"},
+    {"hotel": "naha",    "external_id": "MK-203", "name": "モノレール駅（架空）",     "category": "transport",  "lat": 26.213300, "lng": 127.678100, "address": "架空市 架空駅前32-3", "description": "モックAPIから取り込んだ交通拠点"},
+
+    {"hotel": "kyoto",   "external_id": "BAD-01", "name": "",                         "category": "restaurant", "lat": 34.990000, "lng": 135.760000, "address": "施設名が空", "description": "不正: 名前なし"},
+    {"hotel": "kyoto",   "external_id": "BAD-02", "name": "緯度が範囲外の店（架空）", "category": "shop",       "lat": 91.000000, "lng": 135.760000, "address": "緯度が範囲外", "description": "不正: 緯度が91"},
+    {"hotel": "kyoto",   "external_id": "BAD-03", "name": "存在しないカテゴリ（架空）", "category": "spa",       "lat": 34.990000, "lng": 135.760000, "address": "カテゴリ不明", "description": "不正: カテゴリ spa"},
+    {"hotel": "osaka",   "external_id": "BAD-04", "name": "存在しないホテルの施設（架空）", "category": "shop",   "lat": 34.700000, "lng": 135.500000, "address": "ホテル不明", "description": "不正: hotel=osaka"},
+    {"hotel": "naha",    "external_id": "BAD-05", "name": "経度が数値でない店（架空）", "category": "shop",      "lat": 26.210000, "lng": "abc",       "address": "経度が文字", "description": "不正: 経度が abc"},
+    {"hotel": "kyoto",   "external_id": "MK-001", "name": "朝焼けベーカリー（重複行）", "category": "restaurant", "lat": 34.986500, "lng": 135.760800, "address": "重複", "description": "不正: 同じファイル内で external_id が重複"},
+    {"hotel": "sapporo", "name": "外部IDのない施設（架空）", "category": "shop", "lat": 43.070000, "lng": 141.350000, "address": "external_id なし", "description": "不正: external_id がない"}
+  ]
+}

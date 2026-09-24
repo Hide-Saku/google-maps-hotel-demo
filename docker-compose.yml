@@ -1,0 +1,49 @@
+# 起動: docker compose up -d --build   →  http://localhost:8080/
+# ポートは 8080 固定（Google のキーのリファラ制限が http://localhost:8080/* のため）
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    env_file: .env
+    volumes:
+      - ${SRC_DIR:-.}:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # テスト専用（別のDB hotel_map_test に接続。デモのデータには触れない）
+  web_test:
+    profiles: ["test"]
+    build: .
+    ports:
+      - "8081:80"
+    env_file: .env
+    environment:
+      DB_NAME: hotel_map_test
+      IS_TEST: "1"
+    volumes:
+      - ${SRC_DIR:-.}:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_0900_ai_ci"]
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./db/00-test-db.sql:/docker-entrypoint-initdb.d/00-test-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+volumes:
+  dbdata:
