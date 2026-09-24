@@ -38,3 +38,13 @@ function send_security_headers(): void
     header('X-Frame-Options: DENY');
     header('Referrer-Policy: strict-origin-when-cross-origin');
 }
+
+/** DB（UTC）の日時文字列を日本時間の「Y-m-d H:i:s」にして返す。変換できなければ元の文字列。 */
+function jst(string $utc): string
+{
+    try {
+        return (new DateTimeImmutable($utc, new DateTimeZone('UTC')))->setTimezone(new DateTimeZone('Asia/Tokyo'))->format('Y-m-d H:i:s');
+    } catch (Exception) {
+        return $utc;
+    }
+}

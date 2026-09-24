@@ -23,10 +23,10 @@ View::header('ホテル一覧');
 <h2>取り込みの履歴（直近5件）</h2>
 <?php if (!$runs): ?><p class="muted">まだありません。</p><?php else: ?>
 <table>
-  <thead><tr><th>#</th><th>日時</th><th>取得元</th><th>ファイル</th><th>追加</th><th>更新</th><th>変更なし</th><th>スキップ</th><th>状態</th></tr></thead>
+  <thead><tr><th>#</th><th>日時（日本時間）</th><th>取得元</th><th>ファイル</th><th>追加</th><th>更新</th><th>変更なし</th><th>スキップ</th><th>状態</th></tr></thead>
   <tbody>
   <?php foreach ($runs as $r): ?>
-    <tr><td><?= (int)$r['id'] ?></td><td><?= h($r['started_at']) ?></td><td><?= h($r['source']) ?></td><td><?= h($r['file']) ?></td>
+    <tr><td><?= (int)$r['id'] ?></td><td><?= h(jst((string)$r['started_at'])) ?></td><td><?= h($r['source']) ?></td><td><?= h($r['file']) ?></td>
         <td><?= (int)$r['inserted'] ?></td><td><?= (int)$r['updated'] ?></td><td><?= (int)$r['unchanged'] ?></td><td><?= (int)$r['skipped'] ?></td><td><?= h($r['status']) ?></td></tr>
   <?php endforeach; ?>
   </tbody>

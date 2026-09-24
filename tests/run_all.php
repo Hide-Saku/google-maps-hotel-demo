@@ -381,5 +381,22 @@ t('地図ページ: ホテル名と Leaflet を含み、キーが未設定なら
     ok(!str_contains($r['body'], 'password'), '管理者情報が含まれている');
 });
 
+t('管理画面: 取り込み履歴の日時は日本時間で表示（DB は UTC）', function () {
+    eq(jst('2026-01-01 00:00:00'), '2026-01-01 09:00:00');
+    eq(jst('2026-12-31 15:30:00'), '2027-01-01 00:30:00');
+    Db::pdo()->exec("INSERT INTO import_runs (started_at, source, file, inserted, updated, unchanged, skipped, status) VALUES ('2031-05-06 01:02:03', 'tz-test', 'x.json', 0, 0, 0, 0, 'ok')");
+    $body = http('GET', '/admin/', null, logged_in_jar())['body'];
+    ok(str_contains($body, '日時（日本時間）'), '見出しに「日本時間」が無い');
+    ok(str_contains($body, '2031-05-06 10:02:03'), 'UTC の 01:02:03 が日本時間 10:02:03 で出ていない');
+    ok(!str_contains($body, '2031-05-06 01:02:03'), 'UTC のまま出ている');
+});
+t('管理画面: 「地図に表示」の列は「表示／非表示」の文言（札幌は交通が非表示）', function () {
+    Db::pdo()->prepare("DELETE FROM hotel_categories WHERE hotel_id = ? AND category = 'transport'")->execute([hotel_id('sapporo')]);
+    $body = http('GET', '/admin/hotel.php?id=' . hotel_id('sapporo'), null, logged_in_jar())['body'];
+    ok(str_contains($body, '非表示（このホテルでは表示しないカテゴリ）'), '非表示の文言が無い');
+    ok(str_contains($body, '<td>表示</td>'), '表示の文言が無い');
+    ok(!str_contains($body, '○'), '空の丸（○）が残っている');
+});
+
 echo "\n結果: $pass 件合格 / $fail 件失敗\n";
 exit($fail === 0 ? 0 : 1);

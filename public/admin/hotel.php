@@ -71,7 +71,7 @@ View::errors($errors);
       <td><?= h(Validator::CATEGORIES[$f['category']] ?? $f['category']) ?></td>
       <td><?= h((string)$f['lat']) ?>, <?= h((string)$f['lng']) ?></td>
       <td><?= h($f['source']) ?><?= $f['external_id'] !== null ? ' / ' . h($f['external_id']) : '' ?></td>
-      <td><?= (int)$f['visible'] === 1 ? '○' : '×（このホテルでは非表示のカテゴリ）' ?></td>
+      <td><?= (int)$f['visible'] === 1 ? '表示' : '非表示（このホテルでは表示しないカテゴリ）' ?></td>
       <td>
         <a href="/admin/facility.php?hotel_id=<?= $id ?>&amp;id=<?= (int)$f['id'] ?>">編集</a>
         <form method="post" class="inline" onsubmit="return confirm('この施設を削除しますか？');">
