@@ -1,0 +1,29 @@
+  ok   kyoto: 埋め込み件数 = API の件数 (8)
+  ok   kyoto: 施設の内容（名前・座標・住所・説明）が API と一致
+  ok   kyoto/restaurant: カテゴリ別の件数が API と一致 (2)
+  ok   kyoto/shop: カテゴリ別の件数が API と一致 (2)
+  ok   kyoto/sight: カテゴリ別の件数が API と一致 (2)
+  ok   kyoto/transport: カテゴリ別の件数が API と一致 (2)
+  ok   kyoto: 表示しないカテゴリの施設が混ざっていない
+  ok   sapporo: 埋め込み件数 = API の件数 (4)
+  ok   sapporo: 施設の内容（名前・座標・住所・説明）が API と一致
+  ok   sapporo/restaurant: カテゴリ別の件数が API と一致 (2)
+  ok   sapporo/shop: カテゴリ別の件数が API と一致 (0)
+  ok   sapporo/sight: カテゴリ別の件数が API と一致 (2)
+  ok   sapporo: 表示しないカテゴリの施設が混ざっていない
+  ok   naha: 埋め込み件数 = API の件数 (5)
+  ok   naha: 施設の内容（名前・座標・住所・説明）が API と一致
+  ok   naha/restaurant: カテゴリ別の件数が API と一致 (2)
+  ok   naha/sight: カテゴリ別の件数が API と一致 (2)
+  ok   naha/transport: カテゴリ別の件数が API と一致 (1)
+  ok   naha: 表示しないカテゴリの施設が混ざっていない
+  ok   ホテルは3件（京都・札幌・那覇）
+  ok   API キー・秘密らしい文字列が無い（AIza / key= / password / secret）
+  ok   Google Maps の読み込みが無い
+  ok   外部の URL は 地図タイル・OSM の著作権表示・リポジトリへのリンクのみ
+  ok   CSP: connect-src が none（fetch・XHR は出せない）
+  ok   「自主検証・架空データ」と「実績ではない」の明記
+  ok   読み取り専用: form・fetch・XMLHttpRequest・innerHTML を使っていない
+  ok   施設データに実在の店名らしい未注記の名前が無い（全件「（架空）」付き）
+
+結果: 27 件合格 / 0 件失敗
