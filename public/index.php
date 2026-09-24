@@ -23,7 +23,7 @@ $map = ($_GET['map'] ?? '') === 'google' && $key !== '' ? 'google' : 'leaflet';
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>施設マップ（デモ）</title>
 <link rel="stylesheet" href="/assets/vendor/leaflet/leaflet.css">
-<link rel="stylesheet" href="/assets/css/app.css">
+<link rel="stylesheet" href="/assets/css/app.css?v=<?= filemtime(__DIR__ . '/assets/css/app.css') ?>">
 <?php if ($key !== ''): ?><meta name="gmaps-key" content="<?= h($key) ?>"><?php endif; ?>
 </head>
 <body>
@@ -54,9 +54,9 @@ $map = ($_GET['map'] ?? '') === 'google' && $key !== '' ? 'google' : 'leaflet';
   <div id="map" role="region" aria-label="施設の地図"></div>
 </main>
 <script src="/assets/vendor/leaflet/leaflet.js"></script>
-<script src="/assets/js/adapters/leaflet.js"></script>
-<script src="/assets/js/adapters/google.js"></script>
-<script src="/assets/js/map.js"></script>
+<script src="/assets/js/adapters/leaflet.js?v=<?= filemtime(__DIR__ . '/assets/js/adapters/leaflet.js') ?>"></script>
+<script src="/assets/js/adapters/google.js?v=<?= filemtime(__DIR__ . '/assets/js/adapters/google.js') ?>"></script>
+<script src="/assets/js/map.js?v=<?= filemtime(__DIR__ . '/assets/js/map.js') ?>"></script>
 <?php endif; ?>
 </body>
 </html>

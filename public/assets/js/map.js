@@ -59,13 +59,17 @@
     return Array.from(document.querySelectorAll('#category-boxes input:checked')).map((i) => i.value);
   }
 
+  // 素早くチェックを切り替えると、古い応答が後から届いて表示を上書きしてしまうため、最新の要求の結果だけを使う
+  let latest = 0;
   async function refresh() {
+    const mine = ++latest;
     try {
       const data = await fetchFacilities(state.hotel, selectedCategories());
+      if (mine !== latest) return; // 古い応答は捨てる
       state.map.setMarkers(data.facilities, popup);
       updateCounts(data.count);
     } catch (e) {
-      showError(e.message);
+      if (mine === latest) showError(e.message);
     }
   }
 
