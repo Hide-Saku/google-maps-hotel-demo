@@ -3,28 +3,61 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https://tile.openstreetmap.org; connect-src 'none'; base-uri 'none'; form-action 'none'">
-<title>施設マップ（静的版デモ）</title>
-<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+<title>施設マップ×管理画面（試作）</title>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:,">
 </head>
 <body>
-<header class="bar"><strong>施設マップ（静的版デモ）</strong></header>
+<header class="bar"><strong>施設マップ×管理画面（試作）</strong></header>
 <main id="app">
-  <p class="note"><strong>自主検証・架空データ。</strong>実務・受託の実績ではありません。ホテル・施設・住所はすべて架空です（地図の中心だけ実在の地域の座標）。この静的版は読み取り専用で、施設データはページに埋め込んだ固定の写しです（PHP・MySQL・API キーは使っていません）。管理画面・取り込み・Google Maps 版は、Docker で動かす本体にあります（<a href="https://github.com/Hide-Saku/google-maps-hotel-demo">リポジトリ</a>）。</p>
-  <div class="controls">
-    <label>ホテル
-      <select id="hotel-select"></select>
-    </label>
-  </div>
-  <fieldset id="categories"><legend>カテゴリ</legend><span id="category-boxes"></span></fieldset>
-  <p id="counts" class="counts" aria-live="polite">読み込み中…</p>
-  <p id="map-error" class="errors" role="alert" hidden></p>
-  <div id="map" role="region" aria-label="施設の地図"></div>
+  <p class="note"><strong>自主検証・架空データ。</strong>実務・受託の実績ではありません。ホテル・施設・住所はすべて架空です（地図の中心だけ実在の地域の座標）。動く画面ではなく、実際に動作させて確認した画面を、実測の記録として掲載しています。コード一式（PHP・MySQL・管理画面・テスト）は<a href="https://github.com/Hide-Saku/google-maps-hotel-demo">リポジトリ</a>にあります。</p>
+
+  <section class="shot-group">
+    <h2>地図（Leaflet + OpenStreetMap）</h2>
+    <p class="lead">DBの件数と、画面のマーカー数が一致することを確認しています。</p>
+    <div class="shots">
+      <figure><img src="shots/01_map_kyoto_leaflet.jpg" alt="京都・Leaflet版の地図。DB件数8・マーカー数8で一致" loading="lazy"><figcaption>京都：DB 8件 / マーカー 8件（一致）</figcaption></figure>
+      <figure><img src="shots/02_map_naha_leaflet.jpg" alt="那覇・Leaflet版の地図。DB件数5・マーカー数5で一致" loading="lazy"><figcaption>那覇：DB 5件 / マーカー 5件（一致・カテゴリもホテルごとに変わる）</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="shot-group">
+    <h2>地図（Google Maps／制限つきAPIキーで確認）</h2>
+    <p class="lead">Maps JavaScript APIを、リファラ制限・対象API制限つきのキーで動かしました。</p>
+    <div class="shots">
+      <figure><img src="shots/03_map_kyoto_google.jpg" alt="京都・Google Maps版の地図" loading="lazy"><figcaption>京都：Google Maps版</figcaption></figure>
+      <figure><img src="shots/04_map_naha_google.jpg" alt="那覇・Google Maps版の地図" loading="lazy"><figcaption>那覇：Google Maps版</figcaption></figure>
+      <figure><img src="shots/10_map_kyoto_google_infowindow.jpg" alt="Google Mapsの情報ウィンドウ表示" loading="lazy"><figcaption>マーカーを押すと情報ウィンドウが開く</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="shot-group">
+    <h2>管理画面</h2>
+    <p class="lead">ログイン・ホテル別設定・施設の編集ができます。未ログインの操作やCSRFトークンなしの送信は拒否します。</p>
+    <div class="shots">
+      <figure><img src="shots/05_admin_login.jpg" alt="管理画面のログイン画面" loading="lazy"><figcaption>ログイン</figcaption></figure>
+      <figure><img src="shots/06_admin_index_import_history.jpg" alt="ホテル一覧と取り込み履歴" loading="lazy"><figcaption>ホテル一覧・取り込み履歴</figcaption></figure>
+      <figure><img src="shots/07_admin_hotel_facilities.jpg" alt="ホテル別の設定と施設一覧" loading="lazy"><figcaption>ホテル別の設定・施設一覧</figcaption></figure>
+      <figure><img src="shots/08_admin_facility_edit.jpg" alt="施設の編集画面" loading="lazy"><figcaption>施設の編集</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="shot-group">
+    <h2>取り込みと検証</h2>
+    <p class="lead">同じデータを2回流しても件数が増えません（冪等）。認可・CSRF・SQLの特殊文字など7か所をわざと壊し、テストが赤くなることも確認しました。</p>
+    <div class="shots">
+      <figure><img src="shots/09_tests_passed.jpg" alt="テスト29件全件合格の画面" loading="lazy"><figcaption>テスト29件、全件合格</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="shot-group">
+    <h2>静的版（このページの元になったもの）</h2>
+    <p class="lead">PHP・MySQL・APIキーを使わず、埋め込みデータだけで地図を再現した版です。</p>
+    <div class="shots">
+      <figure><img src="shots/11_static_kyoto.jpg" alt="静的版・京都の地図" loading="lazy"><figcaption>静的版：京都</figcaption></figure>
+      <figure><img src="shots/12_static_naha_popup.jpg" alt="静的版・那覇の地図と吹き出し" loading="lazy"><figcaption>静的版：那覇（情報ウィンドウ）</figcaption></figure>
+    </div>
+  </section>
 </main>
-<script src="vendor/leaflet/leaflet.js"></script>
-<script src="data.js"></script>
-<script src="app.js"></script>
 </body>
 </html>
